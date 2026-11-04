@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2A Office Project Staffing Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.9; }
+      50% { opacity: 0.5; }
+    }
+    .agent-active { animation: pulseGlow 2s infinite; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+
+  <!-- Top Navigation -->
+  <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+          <i class="fa-solid fa-network-wired text-white text-lg"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg text-white leading-tight">Agent-to-Agent (A2A) Staffing Engine</h1>
+          <p class="text-xs text-slate-400">Autonomous Resource Planning & Database Query Collaboration</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-950 text-emerald-400 border border-emerald-800">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 animate-ping"></span>
+          2 Agents Online
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+    <!-- Top Section: Architecture Banner & Quick Select -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Input Form -->
+      <div class="lg:col-span-2 bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-base font-semibold text-white flex items-center gap-2">
+            <i class="fa-solid fa-clipboard-list text-indigo-400"></i> Project Specification
+          </h2>
+          <span class="text-xs text-slate-400">Enter any project (Tech, Non-Tech, or Hybrid)</span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Project Title</label>
+          <input type="text" id="projectTitle" placeholder="E.g., Autonomous Healthcare Patient Mobile App" 
+                 class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Project Description & Objectives</label>
+          <textarea id="projectDesc" rows="3" placeholder="Describe the technical requirements, business scope, deliverables, or event goals..."
+                    class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"></textarea>
+        </div>
+
+        <!-- Quick Demo Chips -->
+        <div>
+          <span class="text-xs text-slate-400 block mb-2">Or load a preset scenario:</span>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="loadScenario(0)" class="text-xs bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-lg text-slate-300 transition">
+              💻 AI Patient Portal (Tech)
+            </button>
+            <button onclick="loadScenario(1)" class="text-xs bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-lg text-slate-300 transition">
+              🎪 Global Leaders Summit (Non-Tech)
+            </button>
+            <button onclick="loadScenario(2)" class="text-xs bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-lg text-slate-300 transition">
+              ⚡ Fintech App & PR Launch (Hybrid)
+            </button>
+            <button onclick="loadScenario(3)" class="text-xs bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-lg text-slate-300 transition">
+              🏢 Office Relocation (Non-Tech)
+            </button>
+          </div>
+        </div>
+
+        <button onclick="runPipeline()" id="btnRun" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium rounded-xl shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition active:scale-[0.99]">
+          <i class="fa-solid fa-play text-sm"></i>
+          <span>Initiate Agent-to-Agent Collaboration</span>
+        </button>
+      </div>
+
+      <!-- Agent Cards Overview -->
+      <div class="space-y-4">
+        <!-- Agent 1 Card -->
+        <div class="bg-slate-950 border border-purple-900/40 rounded-2xl p-5 shadow-lg relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-purple-500/10 rounded-full blur-xl pointer-events-none"></div>
+          <div class="flex items-start justify-between mb-2">
+            <div class="flex items-center space-x-3">
+              <div class="w-9 h-9 rounded-xl bg-purple-600/20 text-purple-400 border border-purple-500/30 flex items-center justify-center font-bold">
+                A1
+              </div>
+              <div>
+                <h3 class="text-sm font-semibold text-white">Project Strategist</h3>
+                <p class="text-xs text-purple-300">Staffing & Role Architect</p>
+              </div>
+            </div>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800">Decider</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-2">
+            Classifies project domain, maps requirements into role competencies, requests personnel from Agent 2, and resolves capacity bottlenecks.
+          </p>
+        </div>
+
+        <!-- Agent 2 Card -->
+        <div class="bg-slate-950 border border-blue-900/40 rounded-2xl p-5 shadow-lg relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-blue-500/10 rounded-full blur-xl pointer-events-none"></div>
+          <div class="flex items-start justify-between mb-2">
+            <div class="flex items-center space-x-3">
+              <div class="w-9 h-9 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-bold">
+                A2
+              </div>
+              <div>
+                <h3 class="text-sm font-semibold text-white">Database Specialist</h3>
+                <p class="text-xs text-blue-300">Resource & Knowledge Query</p>
+              </div>
+            </div>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">Retriever</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-2">
+            Interfaces with the 30-employee database, evaluates keyword match scores, computes availability, and proposes optimal candidates.
+          </p>
+        </div>
+
+        <!-- Metric Summary Card (Dynamic) -->
+        <div id="metricsCard" class="hidden bg-slate-950 border border-slate-800 rounded-2xl p-4">
+          <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Collaboration Stats</div>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-slate-900 rounded-xl p-2.5">
+              <div id="statMessages" class="text-base font-bold text-indigo-400">0</div>
+              <div class="text-[10px] text-slate-400">A2A Messages</div>
+            </div>
+            <div class="bg-slate-900 rounded-xl p-2.5">
+              <div id="statAvail" class="text-base font-bold text-emerald-400">0%</div>
+              <div class="text-[10px] text-slate-400">Avg Bandwidth</div>
+            </div>
+            <div class="bg-slate-900 rounded-xl p-2.5">
+              <div id="statExp" class="text-base font-bold text-purple-400">0y</div>
+              <div class="text-[10px] text-slate-400">Avg Experience</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Section: Two-Column Live Trace and Final Roster -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Left Column: A2A Message Exchange Trace (7 cols) -->
+      <div class="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col h-[650px]">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+          <h2 class="text-sm font-semibold text-white flex items-center gap-2">
+            <i class="fa-solid fa-comments text-indigo-400"></i>
+            Live Agent-to-Agent (A2A) Transcript
+          </h2>
+          <span id="traceStatus" class="text-xs text-slate-500">Ready</span>
+        </div>
+
+        <div id="transcriptBox" class="flex-1 overflow-y-auto space-y-3.5 pr-2">
+          <div class="text-center py-20 text-slate-600 text-xs">
+            <i class="fa-regular fa-paper-plane text-3xl mb-3 text-slate-700 block"></i>
+            Submit a project above to witness live message passing and role negotiations between Agent 1 and Agent 2.
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Final Team Roster (5 cols) -->
+      <div class="lg:col-span-5 bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col h-[650px]">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+          <h2 class="text-sm font-semibold text-white flex items-center gap-2">
+            <i class="fa-solid fa-users text-emerald-400"></i>
+            Assembled Team Roster
+          </h2>
+          <span id="rosterCountBadge" class="text-xs px-2 py-0.5 rounded-full bg-slate-900 text-slate-400 border border-slate-800">
+            0 Members
+          </span>
+        </div>
+
+        <div id="rosterBox" class="flex-1 overflow-y-auto space-y-3 pr-2">
+          <div class="text-center py-20 text-slate-600 text-xs">
+            <i class="fa-solid fa-id-badge text-3xl mb-3 text-slate-700 block"></i>
+            The final staffing recommendations made by Agent 1 will appear here with individual match scores and justifications.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    const PRESETS = [
+      {
+        title: "Autonomous AI Healthcare Patient Portal",
+        desc: "Build a secure web and mobile patient portal featuring an AI diagnostic triage chatbot, HIPAA-compliant cloud infrastructure, and real-time medical data pipelines."
+      },
+      {
+        title: "Global Tech Leaders Annual Summit 2027",
+        desc: "Organize a 3-day corporate leadership conference in San Francisco including venue booking, marketing campaigns, sponsor contract negotiations, keynote PR, and VIP logistics."
+      },
+      {
+        title: "Fintech Mobile Banking App & Nationwide Launch",
+        desc: "Develop a React Native and Go-based banking app paired with regulatory GDPR/banking compliance audits, brand creative identity, and targeted social growth campaigns."
+      },
+      {
+        title: "Corporate Office Relocation & Culture Onboarding",
+        desc: "Manage the physical move of 500 employees to a new downtown facility, including vendor procurement, space planning, employee culture workshops, and financial budget tracking."
+      }
+    ];
+
+    function loadScenario(index) {
+      document.getElementById("projectTitle").value = PRESETS[index].title;
+      document.getElementById("projectDesc").value = PRESETS[index].desc;
+    }
+
+    // Default load first scenario
+    loadScenario(0);
+
+    async function runPipeline() {
+      const title = document.getElementById("projectTitle").value.trim();
+      const desc = document.getElementById("projectDesc").value.trim();
+      if (!title) {
+        alert("Please enter a project title.");
+        return;
+      }
+
+      const btn = document.getElementById("btnRun");
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Agents Collaborating...</span>`;
+
+      const transcriptBox = document.getElementById("transcriptBox");
+      const rosterBox = document.getElementById("rosterBox");
+      const traceStatus = document.getElementById("traceStatus");
+
+      transcriptBox.innerHTML = "";
+      rosterBox.innerHTML = "";
+      traceStatus.innerHTML = `<span class="text-amber-400 font-medium">Negotiating in progress...</span>`;
+
+      try {
+        const response = await fetch("/api/staff-project", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, description: desc })
+        });
+        const data = await response.json();
+
+        // Animate A2A Transcript
+        renderTranscript(data.a2a_transcript);
+
+        // Render Metrics
+        document.getElementById("metricsCard").classList.remove("hidden");
+        document.getElementById("statMessages").innerText = data.total_messages_exchanged;
+        document.getElementById("statAvail").innerText = (data.decision?.metrics?.average_availability_percent || 0) + "%";
+        document.getElementById("statExp").innerText = (data.decision?.metrics?.average_experience_years || 0) + "y";
+
+        // Render Roster
+        renderRoster(data.decision);
+        traceStatus.innerHTML = `<span class="text-emerald-400 font-medium">Completed</span>`;
+      } catch (err) {
+        transcriptBox.innerHTML = `<div class="p-4 bg-red-950/50 border border-red-800 rounded-xl text-red-300 text-xs">Error running pipeline: ${err}</div>`;
+        traceStatus.innerText = "Error";
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-play text-sm"></i><span>Initiate Agent-to-Agent Collaboration</span>`;
+      }
+    }
+
+    function renderTranscript(messages) {
+      const box = document.getElementById("transcriptBox");
+      box.innerHTML = "";
+
+      messages.forEach((msg, idx) => {
+        const isAgent1 = msg.sender.includes("planner");
+        const isAgent2 = msg.sender.includes("db");
+
+        let borderCol = isAgent1 ? "border-purple-800/60 bg-purple-950/20" : isAgent2 ? "border-blue-800/60 bg-blue-950/20" : "border-slate-800 bg-slate-900";
+        let badgeCol = isAgent1 ? "bg-purple-900/60 text-purple-300" : isAgent2 ? "bg-blue-900/60 text-blue-300" : "bg-slate-800 text-slate-300";
+        let senderTitle = isAgent1 ? "Agent 1: Strategist" : isAgent2 ? "Agent 2: Database Specialist" : msg.sender;
+
+        const el = document.createElement("div");
+        el.className = `p-3.5 rounded-xl border ${borderCol} transition duration-200`;
+        el.innerHTML = `
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-0.5 rounded font-mono font-semibold text-[11px] ${badgeCol}">${senderTitle}</span>
+              <span class="text-slate-500 text-[10px]">-> ${msg.recipient}</span>
+            </div>
+            <span class="text-slate-500 font-mono text-[10px]">${msg.timestamp}</span>
+          </div>
+          <div class="text-xs font-medium text-slate-200 mb-1">${msg.summary}</div>
+          ${msg.reasoning ? `
+            <div class="mt-2 bg-slate-900/80 rounded-lg p-2 text-[11px] text-amber-200/90 font-mono flex items-start gap-1.5 border border-amber-900/30">
+              <i class="fa-regular fa-lightbulb text-amber-400 mt-0.5"></i>
+              <span>${msg.reasoning}</span>
+            </div>` : ''}
+        `;
+        box.appendChild(el);
+      });
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function renderRoster(decision) {
+      const rosterBox = document.getElementById("rosterBox");
+      const badge = document.getElementById("rosterCountBadge");
+      rosterBox.innerHTML = "";
+
+      const members = decision.team_roster || [];
+      badge.innerText = `${members.length} Specialists`;
+
+      if (members.length === 0) {
+        rosterBox.innerHTML = `<div class="text-xs text-slate-500 p-4 text-center">No specialists assigned.</div>`;
+        return;
+      }
+
+      members.forEach((m) => {
+        const card = document.createElement("div");
+        card.className = "bg-slate-900 border border-slate-800 rounded-xl p-3.5 space-y-2 hover:border-slate-700 transition";
+        card.innerHTML = `
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-semibold text-white">${m.assigned_role}</span>
+                ${m.is_leadership ? '<span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.2 rounded font-medium">Lead</span>' : ''}
+              </div>
+              <div class="text-xs text-emerald-400 font-medium">${m.employee_name} <span class="text-slate-500 font-normal">(${m.department})</span></div>
+            </div>
+            <div class="text-right">
+              <span class="text-xs font-bold text-indigo-400 font-mono">${m.match_score}%</span>
+              <div class="text-[10px] text-slate-400">${m.availability_percent}% Avail</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-1">
+            ${(m.matched_skills || []).slice(0, 4).map(s => `<span class="text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">${s}</span>`).join('')}
+          </div>
+
+          <div class="text-[11px] text-slate-400 border-t border-slate-800/80 pt-2 flex items-start gap-1.5">
+            <i class="fa-solid fa-arrow-turn-down text-slate-600 mt-0.5"></i>
+            <span>${m.justification}</span>
+          </div>
+        `;
+        rosterBox.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>
+

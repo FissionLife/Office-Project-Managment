@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest
+.pytest_cache/
+
+# Virtual Environments
+.venv/
+venv/
+env/
+.env
+
+# Database
+# data/*.db (keep or ignore, we can track schema)
